@@ -1,128 +1,110 @@
-# MDP Project Backend
+# MDP Project Frontend
 
-A Go-based backend API using Fiber framework with MongoDB for user authentication and session management.
+A Next.js frontend application with TypeScript, Tailwind CSS, and Ant Design for the user authentication system.
 
 ## Features
 
-- User authentication with JWT tokens
-- Password validation and change functionality
-- Role-based access control (Admin, Manager, User)
-- Activity logging
-- Input validation
-- Password hashing with bcrypt
-- CORS support
+- Login page with validation
+- Role-based dashboard (Admin, Manager, User)
+- Protected routes
+- Password change functionality
+- JWT token management
+- Responsive design with Tailwind CSS
+- Modern UI components with Ant Design
 
 ## Prerequisites
 
-- Go 1.24.5 or later
-- MongoDB (local or remote)
-- Git
+- Node.js 18+ or later
+- npm or yarn
+- The backend API running on localhost:3033
 
 ## Setup Instructions
 
-### 1. Clone and Navigate
+### 1. Navigate to Frontend Directory
 ```bash
-cd mdp-project-backend
+cd mdp-project-frontend/mdp-ss-xiii-mini-project
 ```
 
 ### 2. Install Dependencies
+
+If you encounter npm issues, try one of these approaches:
+
+**Option A: Clear npm cache and try again**
 ```bash
-go mod tidy
+npm cache clean --force
+rm package-lock.json
+npm install
 ```
 
-### 3. Configure Database
-Edit `config/database.go` to set your MongoDB connection string:
-```go
-mongoURI := "mongodb://localhost:27017" // Change this to your MongoDB URI
-```
-
-### 4. Create Test Users
-Run the seed script to create test users:
+**Option B: Use yarn instead**
 ```bash
-go run seed.go
+npm install -g yarn
+yarn install
 ```
 
-### 5. Run the Server
+**Option C: Use npm with legacy peer deps**
 ```bash
-go run main.go
+npm install --legacy-peer-deps
 ```
 
-The server will start on port 3033.
+### 3. Configure API Endpoint
+The API endpoint is configured in `src/utils/api.ts`. By default it points to:
+```typescript
+const API_BASE_URL = 'http://localhost:3033/api';
+```
+
+### 4. Run Development Server
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+The application will start on `http://localhost:3000`
 
 ## Test Credentials
 
-After running the seed script, you can use these credentials:
+Use these credentials to test different user roles:
 
 - **Admin**: username=`admin`, password=`password123!`
-- **Manager**: username=`manager`, password=`password123!`  
+- **Manager**: username=`manager`, password=`password123!`
 - **User**: username=`user`, password=`password123!`
 
-## API Endpoints
+## Authentication Flow
 
-### Public Routes
-- `GET /` - API information
-- `POST /api/auth/login` - User login
+1. **Login Page** (`/login`): Username/password authentication
+2. **Protected Routes**: Automatic redirection for unauthenticated users
+3. **Role-based Dashboard**: Different content based on user role
+4. **Token Management**: JWT tokens stored in localStorage
+5. **Password Change**: Secure password update functionality
 
-### Protected Routes (Requires Bearer Token)
-- `GET /api/profile` - Get user profile
-- `POST /api/change-password` - Change password
-- `POST /api/logout` - Logout (logs activity)
+## User Roles and Access
 
-## Request Examples
+### Admin Dashboard
+- Total Users statistics
+- Active Sessions monitoring
+- System Reports access
+- Configuration management
+- User management tools
 
-### Login
-```bash
-curl -X POST http://localhost:3033/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"username": "admin", "password": "password123!"}'
-```
+### Manager Dashboard  
+- Team Members overview
+- Active Projects tracking
+- Pending Reviews management
+- Project creation tools
+- Team management access
 
-### Change Password
-```bash
-curl -X POST http://localhost:3033/api/change-password \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
-  -d '{"old_password": "password123!", "new_password": "newPassword123!"}'
-```
+### User Dashboard
+- Personal documents view
+- Pending tasks tracking
+- Completion statistics
+- Document creation tools
 
-## Password Requirements
+## Troubleshooting
 
-- At least 8 characters long
-- Contains at least one letter
-- Contains at least one number  
-- Contains at least one special character
+### Common Issues
 
-## Project Structure
-
-```
-mdp-project-backend/
-├── main.go              # Main application entry point
-├── seed.go              # Database seeding script
-├── go.mod               # Go module dependencies
-├── config/
-│   └── database.go      # MongoDB connection
-├── models/
-│   └── user.go          # Data models
-├── handlers/
-│   └── auth.go          # HTTP handlers
-├── middleware/
-│   └── auth.go          # Authentication middleware
-└── utils/
-    └── auth.go          # Authentication utilities
-```
-
-## Security Features
-
-- JWT token authentication
-- Password hashing with bcrypt
-- Input validation
-- Rate limiting ready
-- CORS enabled
-- Activity logging
-
-## Development
-
-To modify the JWT secret key, update the `jwtSecret` variable in `utils/auth.go`:
-```go
-var jwtSecret = []byte("your-secret-key-change-this-in-production")
-```
+1. **npm install fails**: Try using yarn or the legacy peer deps flag
+2. **API calls fail**: Check if backend is running on port 3033
+3. **Token errors**: Clear localStorage and login again
+4. **Build errors**: Ensure all TypeScript types are properly imported
